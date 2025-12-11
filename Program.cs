@@ -19,7 +19,7 @@ if (File.Exists(pTableFile))
 }
 else
 {
-    pTableList = new List<List<string>>();
+    pTableList = [];
 }
 
 // The pTable List retrieved from the file should be 118 elements long with a header line
@@ -33,6 +33,10 @@ var assertNaNO3 = StringParser("NaNO3");
 Debug.Assert(assertNaNO3.Count == 3);
 Debug.Assert(assertNaNO3[2].atomCount == 3);
 
+// NaNO3 and HCN should calculate to these molar masses
+Debug.Assert(findMolarMass(assertNaNO3, pTableList).ToString("F4") == "84.9947");
+Debug.Assert(findMolarMass(assertHCN, pTableList).ToString("F4") == "27.0253");
+
 string[] mainMenuArray = [  "1. Bookmarks",
                             "2. Molar Mass Calculator",
                             "3. Element Look Up",
@@ -42,7 +46,7 @@ string[] mainMenuArray = [  "1. Bookmarks",
 bool exiting = false;
 while (exiting == false)
 {
-
+    // Handles the returned integer from the menu system
     switch (SelectMenu(mainMenuArray))
     {
         case 1:
@@ -56,10 +60,13 @@ while (exiting == false)
         case 3:
             Console.WriteLine("3");
             string elementLookUp = userInputHandler("Give us an element!");
-            foreach ((string elementSymbol, int atomCount) in StringParser(elementLookUp))
+            var listOfElements = StringParser(elementLookUp);
+            foreach ((string elementSymbol, int atomCount) in listOfElements)
             {
                 Console.WriteLine($"Element: {elementSymbol} Atoms: {atomCount}");
             }
+            double molarMass = findMolarMass(listOfElements, pTableList);
+            Console.WriteLine($"Molar Mass: {molarMass:F4}");
             exiting = true;
             break;
         case 4:
@@ -166,7 +173,7 @@ static int SelectMenu(string[] menuArray)
         int userInputValue = (int)userInput - 48;
 
         // Then checks if that number is a possible choice on the menu
-        if (userInputValue >= 1 && userInputValue < menuArray.Length)
+        if (userInputValue >= 1 && userInputValue <= menuArray.Length)
         {
             optionHighlighted = userInputValue;
             selectionMade = true;
@@ -229,4 +236,37 @@ static List<(string elementSymbol, int atomCount)> StringParser(string inputStri
         formulaList.Add((elementSymbol, atomCountInt));
     }
     return formulaList;
+}
+
+// Searches through the passed list to retrieve the information of the passed string's element symbol
+static List<string> RetrieveInfo(string elementSymbol, List<List<string>> listToSearch)
+{
+    foreach (List<string> element in listToSearch)
+    {
+        if (elementSymbol == element[1].Trim())
+            return element;
+    }
+    // If we get through the entire table without an element to return, just give them Neon
+    return listToSearch[10];
+}
+
+static double findMolarMass(List<(string elementSymbol, int atomCount)> atomList, List<List<string>> pTable)
+{
+    double massTotal = 0;
+    foreach ((string elementSymbol, int atomCount) in atomList)
+    {
+        string elementMassString = RetrieveInfo(elementSymbol, pTable)[3];
+        string trimmedMassString = "0";
+        for (int charIndex = 0; charIndex < elementMassString.Length; charIndex++)
+        {
+            if (elementMassString[charIndex] == '(')
+            {
+                trimmedMassString = elementMassString.Substring(0, charIndex);
+                charIndex = elementMassString.Length;
+            }
+        }
+        if (double.TryParse(trimmedMassString, out double parsedMass))
+            massTotal += parsedMass * atomCount;
+    }
+    return massTotal;
 }
