@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 // Store paths as variables we can edit easily later if need be
-string retrieveURL = "placeholder";
+string retrieveURL = "https://raw.githubusercontent.com/JOSnow985/ChemAssistant/refs/heads/main/ptable.csv";
 string pTableFile = "ptable.csv";
 
 // Check if we have a ptable, try to get it if we don't!
