@@ -22,6 +22,9 @@ else
     pTableList = [];
 }
 
+
+
+// ---- Asserts ----
 // The pTable List retrieved from the file should be 118 elements long with a header line
 Debug.Assert(pTableList.Count == 119);
 // HCN should be parsed into a list with three entries, any entry should have an atom count of 1
@@ -32,10 +35,12 @@ Debug.Assert(assertHCN[1].atomCount == 1);
 var assertNaNO3 = StringParser("NaNO3");
 Debug.Assert(assertNaNO3.Count == 3);
 Debug.Assert(assertNaNO3[2].atomCount == 3);
-
 // NaNO3 and HCN should calculate to these molar masses
 Debug.Assert(findMolarMass(assertNaNO3, pTableList).ToString("F4") == "84.9947");
 Debug.Assert(findMolarMass(assertHCN, pTableList).ToString("F4") == "27.0253");
+// ----         ----
+
+
 
 string[] mainMenuArray = [  "1. Bookmarks",
                             "2. Molar Mass Calculator",
@@ -83,10 +88,7 @@ while (exiting == false)
 
 
 
-
-
-
-// -------------------------------- Methods --------------------------------
+// ---- Methods ----
 
 // Checks if we already have a ptable.csv to use, if we don't, ask for permission to retrieve it
 static async Task fileGrab(string retrieveURL, string outputFilePath)
@@ -250,12 +252,15 @@ static List<string> RetrieveInfo(string elementSymbol, List<List<string>> listTo
     return listToSearch[10];
 }
 
+// Uses info from RetrieveInfo to grab the molar masses from the data file
 static double findMolarMass(List<(string elementSymbol, int atomCount)> atomList, List<List<string>> pTable)
 {
     double massTotal = 0;
+    // Iterate over the list of atoms passed, these are what we're finding the masses of and adding up
     foreach ((string elementSymbol, int atomCount) in atomList)
     {
         string elementMassString = RetrieveInfo(elementSymbol, pTable)[3];
+        // Because the molar mass isn't a pure number in the data file, we need to trim it
         string trimmedMassString = "0";
         for (int charIndex = 0; charIndex < elementMassString.Length; charIndex++)
         {
@@ -265,6 +270,7 @@ static double findMolarMass(List<(string elementSymbol, int atomCount)> atomList
                 charIndex = elementMassString.Length;
             }
         }
+        // Finally try parsing, if it works we multiply the resulting double by the number of atoms present
         if (double.TryParse(trimmedMassString, out double parsedMass))
             massTotal += parsedMass * atomCount;
     }
