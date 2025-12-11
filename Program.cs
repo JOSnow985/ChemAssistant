@@ -45,10 +45,6 @@ while (exiting == false)
 
     switch (SelectMenu(mainMenuArray))
     {
-        case 0:
-            Console.WriteLine("0");
-            exiting = true;
-            break;
         case 1:
             Console.WriteLine("1");
             exiting = true;
@@ -170,7 +166,7 @@ static int SelectMenu(string[] menuArray)
         int userInputValue = (int)userInput - 48;
 
         // Then checks if that number is a possible choice on the menu
-        if (userInputValue >= 0 && userInputValue < menuArray.Length)
+        if (userInputValue >= 1 && userInputValue < menuArray.Length)
         {
             optionHighlighted = userInputValue;
             selectionMade = true;
