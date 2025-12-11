@@ -1,6 +1,7 @@
 ﻿// Jaden Olvera, CS-1400, Final Project: Chem Assistant
 
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 // Store paths as variables we can edit easily later if need be
 string retrieveURL = "placeholder";
@@ -23,16 +24,25 @@ else
 
 // The pTable List retrieved from the file should be 118 elements long with a header line
 Debug.Assert(pTableList.Count == 119);
+// HCN should be parsed into a list with three entries, any entry should have an atom count of 1
+var assertHCN = StringParser("HCN");
+Debug.Assert(assertHCN.Count == 3);
+Debug.Assert(assertHCN[1].atomCount == 1);
+// NaNO3 should be parsed into a list with three entries, and the third entry should have an atom count of 3
+var assertNaNO3 = StringParser("NaNO3");
+Debug.Assert(assertNaNO3.Count == 3);
+Debug.Assert(assertNaNO3[2].atomCount == 3);
 
-string[] mainMenuArray = [  "1. Molar Mass Calculator",
-                                "2. Bookmarks",
-                                "3. Element Look Up",
-                                "4. Exit"
+string[] mainMenuArray = [  "1. Bookmarks",
+                            "2. Molar Mass Calculator",
+                            "3. Element Look Up",
+                            "4. Exit"
                         ];
 
 bool exiting = false;
 while (exiting == false)
 {
+
     switch (SelectMenu(mainMenuArray))
     {
         case 0:
@@ -49,6 +59,11 @@ while (exiting == false)
             break;
         case 3:
             Console.WriteLine("3");
+            string elementLookUp = userInputHandler("Give us an element!");
+            foreach ((string elementSymbol, int atomCount) in StringParser(elementLookUp))
+            {
+                Console.WriteLine($"Element: {elementSymbol} Atoms: {atomCount}");
+            }
             exiting = true;
             break;
         case 4:
@@ -94,11 +109,11 @@ static async Task fileGrab(string retrieveURL, string outputFilePath)
                 using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
 
                 // Checks the code we get back, if we get a bad one, we don't want to try writing the file
-                HttpResponseMessage resp = await http.GetAsync(retrieveURL);
-                resp.EnsureSuccessStatusCode();
+                HttpResponseMessage response = await http.GetAsync(retrieveURL);
+                response.EnsureSuccessStatusCode();
 
                 // Await lets us pause the program until we finish this part, but doesn't "block the thread"
-                await using var stream = await resp.Content.ReadAsStreamAsync();
+                await using var stream = await response.Content.ReadAsStreamAsync();
                 await using var file = File.Create(outputFilePath);
                 await stream.CopyToAsync(file);
             }
@@ -175,4 +190,47 @@ static int SelectMenu(string[] menuArray)
 
     // Return selected option, offset by 1 to account for zero indexing the array
     return optionHighlighted;
+}
+
+static string userInputHandler(string prompt)
+{
+    while (true)
+    {
+    drawHeader();
+    Console.WriteLine(prompt);
+    string userInput = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(userInput))
+    {
+        Console.WriteLine("Sorry but your input didn't look right.\nPlease try again with something like this: KMnO4\n");
+        Console.WriteLine("Press any key to continue!");
+        Console.ReadKey(true);
+    }
+    else
+        return userInput;
+    }
+}
+
+// Uses Regex to take a string and parse it to a list of elements and numbers of atoms
+static List<(string elementSymbol, int atomCount)> StringParser(string inputString)
+{
+    List<(string, int)> formulaList = [];
+
+    // Makes two "groups" that we'll use to make our tuple, needs at least one letter for the element's symbol
+    // The *'s indicate those components are optional, the element doesn't need a lowercase letter and a digit
+    string regexPattern = @"([A-Z][a-z]*)(\d*)";
+    foreach (Match pulledElement in Regex.Matches(inputString, regexPattern))
+    {
+        // The "Match" returns two groups, the symbol string and a string containing the number of atoms
+        string elementSymbol = pulledElement.Groups[1].Value;
+        string atomCountString = pulledElement.Groups[2].Value;
+
+        // If there isn't an atom count in the second string, it's just a single atom.
+        int atomCountInt;
+        if (Int32.TryParse(atomCountString, out int atomParse) == true)
+            atomCountInt = atomParse;
+        else
+            atomCountInt = 1;
+        formulaList.Add((elementSymbol, atomCountInt));
+    }
+    return formulaList;
 }
