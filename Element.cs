@@ -1,4 +1,4 @@
-// Element.cs
+// Element object
 using System.Text.Json.Serialization;
 
 public class Element
