@@ -324,7 +324,7 @@ static void savedMoleculeMenu(ref List<string[]> savedMolecules)
         // Using the minimum index as a start point, we grab lines up to our maximum
         for (int index = viewRangeMin; index <= viewRangeMax; index++)
         {
-            createSavedMenu.Add($"{index + 1 + ".", -3} Molecule: {savedMolecules[index][0], -13} Molar Mass: {savedMolecules[index][1]}");
+            createSavedMenu.Add($"{index + 1 + ".", -3} Molecule: {savedMolecules[index][0], -13} Molar Mass: {savedMolecules[index][1], -8} g·mol⁻¹");
         }
         string[] savedMoleculeMenu = createSavedMenu.ToArray();
         
