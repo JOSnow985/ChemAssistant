@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChemAssistant")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+023ddc9524e5fa07591f26394a4aaf59c11d6e2e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+700aa1c95be61ef939a2ff5592ef02d6a1a49d2c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChemAssistant")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChemAssistant")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

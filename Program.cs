@@ -92,10 +92,13 @@ while (exiting == false)
             double molarMass = findMolarMass(in molecule, in pTableList);
 
             Console.WriteLine($"Molar Mass: {molarMass:F4}");
-            Console.WriteLine("\nDo you want to save this molecule?\n[Y]es or [N]o");
+            // Only offer the option to save the molecule if the molar mass is not 0, so we don't save a potentially bad molecule
+            if (molarMass != 0)
+            {
+                Console.WriteLine("\nDo you want to save this molecule?\n[Y]es or [N]o");
 
-            // If the user wants to save this molecule, we check if it's already in the file first
-            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                // If the user wants to save this molecule, we check if it's already in the file first
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
                 {
                     bool alreadySaved = false;
                     foreach (string[] line in savedMolecules)
@@ -103,7 +106,7 @@ while (exiting == false)
                         if (line[0] == userInput)
                             alreadySaved = true;
                     }
-                    if(alreadySaved == true)
+                    if (alreadySaved == true)
                     {
                         Console.WriteLine("Molecule already saved!\nPress any key to continue.");
                     }
@@ -114,6 +117,9 @@ while (exiting == false)
                         Console.WriteLine("Molecule saved!\nPress any key to continue.");
                     }
                 }
+            }
+            else
+                Console.WriteLine("\nPress any key to return to the main menu.");
             Console.ReadKey(true);
             break;
 
@@ -293,16 +299,18 @@ static int selectMenu(in string[] menuArray, in string prompt, out int optionHig
 // Menu system for displaying a selection of saved molecules, list passed as a ref so we can edit it in the method
 static void savedMoleculeMenu(ref List<string[]> savedMolecules)
 {
-    // A minimum and maximum index value so we only show so many saved molecules at a time
+    // A minimum and maximum index value so we only show so many saved molecules at a time, targeting 9 molecules per "page"
     int numberSaved = savedMolecules.Count;
     if (numberSaved == 0)
         return;
     int viewRangeMin = 0;
     int viewRangeMax = 8;
+
     // If there's not enough to fill every "slot", we set the max index to one less than the count, because it's zero indexed
     if (numberSaved < 8)
         viewRangeMax = numberSaved - 1;
-    // Page counter to be used as a multiplier
+
+    // Page counter to be used as a multiplier later
     int currentPage = 1;
     bool exiting = false;
     string savedMoleculePrompt = "Here are the molecules you've saved!\nControls: <-: Previous Page or Exit   ->: Next Page   D: Delete";
