@@ -49,6 +49,8 @@ string[] mainMenuArray = [  "1. Bookmarks",
 bool exiting = false;
 while (exiting == false)
 {
+    string userInput;
+    List<(Element element, int atomCount)> molecule;
     // Handles the returned integer from the menu system
     switch (selectMenu(mainMenuArray, mainMenuPrompt))
     {
@@ -58,21 +60,42 @@ while (exiting == false)
             break;
         case 2:
             // Collect molecule from user input
-            string userInput = userInputHandler("What molecule do you want the molar mass of?");
+            userInput = userInputHandler("What molecule do you want the molar mass of?");
             // Parse userInput to a list of elements and atom counts
-            var molecule = moleculeParser(userInput, in pTableList);
-            foreach(var atoms in molecule)
-                {
-                    Console.WriteLine($"Element: {atoms.element.Name} Count: {atoms.atomCount} Atomic Mass: {atoms.element.AtomicMass}");
-                }
+            molecule = moleculeParser(userInput, in pTableList);
+            // Print out elements and counts and their masses
+            foreach (var (element, atomCount) in molecule)
+            {
+                Console.WriteLine($"Element: {element.Name} Count: {atomCount} Atomic Mass: {element.AtomicMass}");
+            }
+            // Parse the atomic mass property and total it up
             double molarMass = findMolarMass(in molecule, in pTableList);
             Console.WriteLine($"Molar Mass: {molarMass:F4}");
             Console.WriteLine("\nPress any key to return to the main menu!");
             Console.ReadKey(true);
             break;
         case 3:
-            Console.WriteLine("3");
-            exiting = true;
+            userInput = userInputHandler("What elements do you want information on?");
+            molecule = moleculeParser(userInput, in pTableList);
+            foreach (var (element, atomCount) in molecule)
+            {
+                drawHeader();
+                Console.WriteLine(userInput);
+                Console.WriteLine($"\n{element.Name} ({element.Symbol})\n"
+                    + $"Atomic Mass: {element.AtomicMass + " g·mol⁻¹",-25}"
+                    + $"Electron Configuration: {element.ElectronConfig}\n"
+                    + $"Group Block: {element.GroupBlock,-25}"
+                    + $"Electronegativity: {element.Electronegativity.ToString() + " (Pauling)"}\n"
+                    + $"Boiling Point: {element.BoilingPoint.ToString() + " K",-23}"
+                    + $"Density: {element.Density.ToString() + " g·cm⁻³"}\n"
+                    + $"Melting Point: {element.MeltingPoint} K"
+                    );
+                if (element != molecule[^1].element)
+                    Console.WriteLine("\nPress any key to see the next element's info!");
+                else
+                    Console.WriteLine("\nPress any key to return to the main menu!");
+                Console.ReadKey(true);
+            }
             break;
         case 4:
             Console.WriteLine("4");
@@ -216,13 +239,15 @@ static int selectMenu(in string[] menuArray, in string prompt)
     return optionHighlighted;
 }
 
+// Method that will print a prompt and take a user input to provide to other methods
 static string userInputHandler(string prompt)
 {
     while (true)
     {
     drawHeader();
     Console.WriteLine(prompt + "\n");
-    string userInput = Console.ReadLine();
+    // User input could be null or otherwise bad, so we need to validate
+    string? userInput = Console.ReadLine();
     if (string.IsNullOrWhiteSpace(userInput))
     {
         Console.WriteLine("Sorry but your input didn't look right.\nPlease try again with something like this: KMnO4\n");

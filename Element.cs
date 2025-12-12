@@ -24,6 +24,15 @@ public class Element
     [JsonPropertyName("groupBlock")]
     public string? GroupBlock { get; set; }
 
+    [JsonPropertyName("meltingPoint")]
+    public int? MeltingPoint { get; set; }
+
+    [JsonPropertyName("boilingPoint")]
+    public int? BoilingPoint { get; set; }
+
+    [JsonPropertyName("density")]
+    public double? Density { get; set; }
+
     [JsonPropertyName("electronegativity")]
     public required double? Electronegativity { get; set; }
 
