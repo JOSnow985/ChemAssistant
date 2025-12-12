@@ -1,0 +1,15 @@
+/home/nobaraneko/Documents/CS1400/ChemAssistant/bin/Debug/net8.0/ChemAssistant
+/home/nobaraneko/Documents/CS1400/ChemAssistant/bin/Debug/net8.0/ChemAssistant.deps.json
+/home/nobaraneko/Documents/CS1400/ChemAssistant/bin/Debug/net8.0/ChemAssistant.runtimeconfig.json
+/home/nobaraneko/Documents/CS1400/ChemAssistant/bin/Debug/net8.0/ChemAssistant.dll
+/home/nobaraneko/Documents/CS1400/ChemAssistant/bin/Debug/net8.0/ChemAssistant.pdb
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.GeneratedMSBuildEditorConfig.editorconfig
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.AssemblyInfoInputs.cache
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.AssemblyInfo.cs
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.csproj.CoreCompileInputs.cache
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.sourcelink.json
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.dll
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/refint/ChemAssistant.dll
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.pdb
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ChemAssistant.genruntimeconfig.cache
+/home/nobaraneko/Documents/CS1400/ChemAssistant/obj/Debug/net8.0/ref/ChemAssistant.dll
